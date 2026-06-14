@@ -330,7 +330,7 @@ addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(onScroll);tick
 addEventListener('resize',onScroll);
 onScroll();
 
-/* contact -> Formspree POST (replace REPLACE_ID with your form id) */
+/* contact -> Formspree AJAX POST */
 document.getElementById('send').addEventListener('click', async (e)=>{
   const btn=e.currentTarget;
   const name=document.getElementById('f-name').value.trim();
@@ -338,13 +338,15 @@ document.getElementById('send').addEventListener('click', async (e)=>{
   const need=document.getElementById('f-div').value;
   const message=document.getElementById('f-msg').value.trim();
   if(!email||!message){btn.textContent='Add your email + message';return;}
-  btn.textContent='Sending…';
+  btn.disabled=true; btn.textContent='Sending…';
   try{
-    const r=await fetch('https://formspree.io/f/REPLACE_ID',{
+    const r=await fetch('https://formspree.io/f/xvzndvqp',{
       method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({name,email,need,message})
+      // _subject + _replyto are Formspree special fields (email subject / reply-to)
+      body:JSON.stringify({name,email,need,message,_replyto:email,_subject:`New inquiry — ${name||'Website'}`})
     });
     btn.textContent = r.ok ? "Sent ✓ — we'll reply within 24h" : 'Something went wrong';
     if(r.ok){['f-name','f-email','f-msg'].forEach(id=>document.getElementById(id).value='');}
   }catch{ btn.textContent='Network error — try again'; }
+  btn.disabled=false;
 });

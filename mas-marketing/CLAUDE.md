@@ -61,11 +61,12 @@ and have `buildCase` emit `<img>/<video>` when present instead of the `.ph` plac
 - Never recolor client logos in `assets/clients/`.
 
 ## Contact form
-The `#send` handler in main.js POSTs JSON `{name,email,need,message}` to **Formspree**.
-**To activate:** create a form at formspree.io and replace `REPLACE_ID` in the
-`https://formspree.io/f/REPLACE_ID` URL with your form id. Field ids are `f-name`,
-`f-email`, `f-div`, `f-msg`; only email + message are required. The button text
-reflects sending / success / error state.
+The `#send` handler in main.js POSTs JSON to **Formspree** (AJAX, no page reload),
+form id `xvzndvqp` → `https://formspree.io/f/xvzndvqp`. It sends
+`{name,email,need,message}` plus the `_replyto` and `_subject` Formspree special
+fields. Field ids are `f-name`, `f-email`, `f-div`, `f-msg`; only email + message
+are required. The button disables while sending and reflects sending / success /
+error state. To change destination, swap the form id in the fetch URL.
 
 ## Deploy
 - **Cloudflare Pages**: `npx wrangler pages deploy .`
