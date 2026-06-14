@@ -24,20 +24,28 @@ const MEDIA = {
 function hydrateSlots(){
   document.querySelectorAll('[data-slot]').forEach(ph=>{
     const cfg=MEDIA[ph.dataset.slot]; if(!cfg||!cfg.src) return;
+    // Reveal-safety net: .rv/.clip tiles start invisible (opacity:0 / clipped)
+    // until the scroll observer adds .in. A hydrated tile must never stay hidden
+    // if that observer misses it — so also reveal the instant the real media
+    // decodes. This keeps the fade/clip-wipe animation, just guarantees it runs.
+    const reveal=()=>ph.classList.add('in');
     let el;
     if(cfg.type==='video'){
       el=document.createElement('video');
       el.src=cfg.src; el.autoplay=true; el.muted=true; el.loop=true;
       el.setAttribute('playsinline',''); el.setAttribute('preload','metadata');
       if(cfg.poster) el.poster=cfg.poster;
+      el.addEventListener('loadeddata',reveal,{once:true});
     } else {
       el=document.createElement('img');
       el.src=cfg.src; el.loading='lazy';
       el.alt=ph.querySelector('.lab')?.textContent||'';
+      el.addEventListener('load',reveal,{once:true});
     }
     el.className='slot-fill';
     el.onerror=()=>el.remove();   // bad path -> fall back to placeholder, no broken icon
     ph.appendChild(el);
+    if(el.complete && el.naturalWidth) reveal();   // already cached -> reveal now
   });
 }
 hydrateSlots();
