@@ -156,8 +156,8 @@
   .chip:hover{transform:translateY(-6px);box-shadow:0 22px 50px -18px rgba(250,26,10,.5)}
   .chip img{height:46px;width:auto;object-fit:contain}
   /* per-logo size bumps: compact/badge marks read small at the uniform 46px */
-  .chip img.l-disney,.chip img.l-wb{height:53px}                                              /* +15% */
-  .chip img.l-d1-sports,.chip img.l-spongebob,.chip img.l-weather-channel,.chip img.l-paris{height:55px} /* +20% */
+  .chip img.l-disney,.chip img.l-wb{height:64px}                                              /* +39% */
+  .chip img.l-d1-sports,.chip img.l-spongebob,.chip img.l-weather-channel,.chip img.l-paris{height:66px} /* +43% */
   .chip.text{font-family:'Archivo';font-weight:800;font-size:24px;letter-spacing:-.01em;color:#0c1426}
   .chip.text small{display:block;font-family:'Space Mono';font-size:8px;letter-spacing:.2em;color:#FA1A0A;text-transform:uppercase;margin-top:3px;text-align:center}
   .clients-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:28px;margin-top:56px}
