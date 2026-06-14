@@ -1,0 +1,30 @@
+{
+  "_comment": "Asset manifest. Fill each `asset` with a filename you drop in /assets. This is the single source of truth for what-goes-where; Claude Code reads this to wire media in.",
+  "static_slots": [
+    {"slot":"hero-reel",     "section":"1 — Clips & Photos", "type":"video", "ratio":"16:9", "role":"Showreel — most cinematic, highest-energy cut", "asset":""},
+    {"slot":"vertical-clip", "section":"1 — Clips & Photos", "type":"video", "ratio":"9:16", "role":"Phone/TikTok-native vertical content", "asset":""},
+    {"slot":"photo-1",       "section":"1 — Clips & Photos", "type":"image", "ratio":"1:1",  "role":"Punchy still — face / on-set / product", "asset":""},
+    {"slot":"photo-2",       "section":"1 — Clips & Photos", "type":"image", "ratio":"1:1",  "role":"Punchy still", "asset":""},
+    {"slot":"campaign-film", "section":"1 — Clips & Photos", "type":"video", "ratio":"16:9", "role":"Second strong landscape clip", "asset":""},
+    {"slot":"still-1",       "section":"1 — Clips & Photos", "type":"image", "ratio":"1:1",  "role":"Still", "asset":""},
+    {"slot":"still-2",       "section":"1 — Clips & Photos", "type":"image", "ratio":"1:1",  "role":"Still", "asset":""},
+    {"slot":"who-photo",     "section":"2 — Who is MAS",     "type":"image", "ratio":"4:5",  "role":"One human shot — team / founder / BTS", "asset":""},
+    {"slot":"div-marketing", "section":"4 — Divisions",      "type":"image", "ratio":"4:3",  "role":"MAS Marketing — identity / brand board", "asset":""},
+    {"slot":"div-fam",       "section":"4 — Divisions",      "type":"video", "ratio":"16:9", "role":"FAM — production / BTS motion", "asset":""},
+    {"slot":"div-ai",        "section":"4 — Divisions",      "type":"video", "ratio":"16:9", "role":"MAS AI — screen-recording of agent/UI", "asset":""},
+    {"slot":"div-distro",    "section":"4 — Divisions",      "type":"image", "ratio":"4:3",  "role":"MAS Distro — analytics / scheduling / results", "asset":""}
+  ],
+  "portfolio_tiles": [
+    {"project":"Disney+",           "cat":"Distribution", "role":"One recognizable hero frame (cover)", "asset":"assets/work/disney.webp"},
+    {"project":"Prime Video",       "cat":"Production",   "role":"Hero frame (cover)", "asset":"assets/work/prime.webp"},
+    {"project":"Warner Bros",       "cat":"Production",   "role":"Hero frame (cover)", "asset":"assets/work/wb.webp"},
+    {"project":"Globoplay",         "cat":"Distribution", "role":"Hero frame (cover)", "asset":"assets/work/globo.webp"},
+    {"project":"Paris Filmes",      "cat":"Branding",     "role":"Hero frame (cover)", "asset":"assets/work/paris.webp"},
+    {"project":"Evens Saint Clair", "cat":"Athletes",     "role":"Hero frame (cover)", "asset":"assets/work/evens.webp"},
+    {"project":"Nestlé",            "cat":"AI",           "role":"Hero frame (cover)", "asset":"assets/work/nestle.webp"}
+  ],
+  "case_overlay_per_project": {
+    "_note": "Phase 2 — optional. Each project's case study can take: hero 16:9, gallery-wide 16:10, still 1:1, clip 9:16. Add via a media:{} field on the project (see CLAUDE.md).",
+    "slots": ["case-hero (16:9)","gallery-wide (16:10)","still (1:1)","clip (9:16)"]
+  }
+}
