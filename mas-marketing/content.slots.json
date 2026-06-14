@@ -1,5 +1,13 @@
 {
   "_comment": "Asset manifest. Fill each `asset` with a filename you drop in /assets. This is the single source of truth for what-goes-where; Claude Code reads this to wire media in.",
+  "_workflow": "Static slots are wired via the MEDIA config in js/main.js — set ONE `src` line per slot (videos also get a `poster`) and hydrateSlots() swaps the placeholder for the real <img>/<video>. A bad path silently falls back to the placeholder. No HTML edits needed.",
+  "_folders": {
+    "assets/media/clips/": "§1 Clips & Photos (hero-reel, vertical-clip, photo-1/2, campaign-film, still-1/2)",
+    "assets/media/about/": "§2 Who (who-photo)",
+    "assets/media/divisions/": "§4 Divisions (div-marketing, div-fam, div-ai, div-distro)",
+    "assets/work/": "Selected Work tiles — img:'assets/work/<name>.webp' on the matching projects[] entry",
+    "assets/work/cases/": "Case-study galleries (phase 2)"
+  },
   "static_slots": [
     {"slot":"hero-reel",     "section":"1 — Clips & Photos", "type":"video", "ratio":"16:9", "role":"Showreel — most cinematic, highest-energy cut", "asset":""},
     {"slot":"vertical-clip", "section":"1 — Clips & Photos", "type":"video", "ratio":"9:16", "role":"Phone/TikTok-native vertical content", "asset":""},

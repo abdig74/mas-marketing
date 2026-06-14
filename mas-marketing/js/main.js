@@ -2,6 +2,48 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 const motionOff = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobile = ()=>innerWidth<=820;
 
+/* ===== MEDIA: real assets for the section placeholders =====
+   Fill `src` when you have the file (paths below). Empty src = keeps the
+   placeholder. Videos get a `poster` (first-frame jpg) for a clean load.
+     clips/photos -> assets/media/clips/
+     who-photo    -> assets/media/about/
+     div-*        -> assets/media/divisions/                                   */
+const MEDIA = {
+  // Fill `src` when you have the file. Empty src = keeps the placeholder. Use a poster for videos.
+  'hero-reel':     {type:'video', src:'', poster:''},   // assets/media/clips/
+  'vertical-clip': {type:'video', src:'', poster:''},
+  'photo-1':       {type:'image', src:''},
+  'photo-2':       {type:'image', src:''},
+  'campaign-film': {type:'video', src:'', poster:''},
+  'still-1':       {type:'image', src:''},
+  'still-2':       {type:'image', src:''},
+  'who-photo':     {type:'image', src:''},               // assets/media/about/
+  'div-marketing': {type:'image', src:''},               // assets/media/divisions/
+  'div-fam':       {type:'video', src:'', poster:''},
+  'div-ai':        {type:'video', src:'', poster:''},
+  'div-distro':    {type:'image', src:''},
+};
+function hydrateSlots(){
+  document.querySelectorAll('[data-slot]').forEach(ph=>{
+    const cfg=MEDIA[ph.dataset.slot]; if(!cfg||!cfg.src) return;
+    let el;
+    if(cfg.type==='video'){
+      el=document.createElement('video');
+      el.src=cfg.src; el.autoplay=true; el.muted=true; el.loop=true;
+      el.setAttribute('playsinline',''); el.setAttribute('preload','metadata');
+      if(cfg.poster) el.poster=cfg.poster;
+    } else {
+      el=document.createElement('img');
+      el.src=cfg.src; el.loading='lazy';
+      el.alt=ph.querySelector('.lab')?.textContent||'';
+    }
+    el.className='slot-fill';
+    el.onerror=()=>el.remove();   // bad path -> fall back to placeholder, no broken icon
+    ph.appendChild(el);
+  });
+}
+hydrateSlots();
+
 /* nav + menu */
 const nav=document.getElementById('nav');
 const toggle=document.getElementById('toggle'),links=document.getElementById('links');
@@ -282,9 +324,21 @@ addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(onScroll);tick
 addEventListener('resize',onScroll);
 onScroll();
 
-/* contact -> mailto */
-document.getElementById('send').addEventListener('click',()=>{
-  const n=f_name.value.trim(),em=f_email.value.trim(),d=f_div.value,m=f_msg.value.trim();
-  const body=`Name: ${n}%0D%0AEmail: ${em}%0D%0ANeed: ${d}%0D%0A%0D%0A${encodeURIComponent(m)}`;
-  location.href=`mailto:hello@masmarketing.com?subject=${encodeURIComponent('New inquiry — '+(n||'Website'))}&body=${body}`;
+/* contact -> Formspree POST (replace REPLACE_ID with your form id) */
+document.getElementById('send').addEventListener('click', async (e)=>{
+  const btn=e.currentTarget;
+  const name=document.getElementById('f-name').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const need=document.getElementById('f-div').value;
+  const message=document.getElementById('f-msg').value.trim();
+  if(!email||!message){btn.textContent='Add your email + message';return;}
+  btn.textContent='Sending…';
+  try{
+    const r=await fetch('https://formspree.io/f/REPLACE_ID',{
+      method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({name,email,need,message})
+    });
+    btn.textContent = r.ok ? "Sent ✓ — we'll reply within 24h" : 'Something went wrong';
+    if(r.ok){['f-name','f-email','f-msg'].forEach(id=>document.getElementById(id).value='');}
+  }catch{ btn.textContent='Network error — try again'; }
 });

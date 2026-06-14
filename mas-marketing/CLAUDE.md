@@ -12,8 +12,11 @@ assets/
   logo-mas.png        MM mark (used in nav, hero, footer, favicon)
   og-image.png        1200x630 social share card
   clients/*.png       real client logos (trusted-by marquee) — DO NOT recolor
-  work/               <- drop portfolio tile images here
-  media/              <- drop section clips/photos here
+  media/clips/        §1 Clips & Photos (hero-reel, vertical-clip, photo-1/2, campaign-film, still-1/2)
+  media/about/        §2 Who (who-photo)
+  media/divisions/    §4 Divisions (div-marketing, div-fam, div-ai, div-distro)
+  work/               Selected Work tile images (per projects[] entry)
+  work/cases/         case-study gallery media (phase 2)
 content.slots.json    asset manifest — source of truth for what-goes-where
 ```
 
@@ -25,17 +28,21 @@ content.slots.json    asset manifest — source of truth for what-goes-where
 
 ## How to place media (follow content.slots.json)
 
-### 1. Static slots (sections 1, 2, 4)
-Each placeholder is `<div class="ph" data-slot="NAME" ...>`. Find by `data-slot` and
-replace the WHOLE `.ph` div with real media, keeping the grid class it sat in:
-- **image slot** → `<img class="slot-fill" src="assets/media/FILE.webp" alt="...">`
-- **video slot** → `<video class="slot-fill" src="assets/media/FILE.mp4" autoplay muted loop playsinline poster="assets/media/FILE.jpg"></video>`
-Add this once to css/styles.css so fills cover correctly:
-```css
-.slot-fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}
-.ph:has(.slot-fill){border:none}
+### 1. Static slots (sections 1, 2, 4) — via the MEDIA config (no HTML edits)
+The placeholders (`<div class="ph" data-slot="NAME">`) are hydrated from the `MEDIA`
+object near the top of `js/main.js`. **You don't touch the HTML.** Just set the `src`
+(and `poster` for videos) for the matching slot key:
+```js
+'hero-reel': {type:'video', src:'assets/media/clips/reel.mp4', poster:'assets/media/clips/reel.jpg'},
+'who-photo': {type:'image', src:'assets/media/about/team.webp'},
 ```
-Wrap fill + keep the existing tile/box if it provides border-radius; or apply radius on the media.
+`hydrateSlots()` runs on load and swaps the placeholder for a `.slot-fill` `<img>`/`<video>`.
+Rules:
+- Empty `src` ⇒ the placeholder stays (safe default).
+- A bad/missing path ⇒ `onerror` removes the media and the placeholder shows again — never a broken icon.
+- The `.slot-fill` + `.ph:has(.slot-fill)` CSS (already in styles.css) handles cover-fit, inherited
+  radius, and hides the placeholder chrome (icon/label/dims/grid).
+- Drop files in the folder noted per slot: `media/clips/` (§1), `media/about/` (§2), `media/divisions/` (§4).
 
 ### 2. Portfolio tiles (section 3)
 In `js/main.js`, the `projects[]` array drives the grid. Add `img:'assets/work/FILE.webp'`
@@ -54,10 +61,11 @@ and have `buildCase` emit `<img>/<video>` when present instead of the `.ph` plac
 - Never recolor client logos in `assets/clients/`.
 
 ## Contact form
-Currently a `mailto:` (see `#send` handler in main.js). To switch:
-- **Netlify Forms**: add `data-netlify="true"` + a hidden `form-name`, wrap fields in a real `<form>`.
-- **Formspree**: POST fields to `https://formspree.io/f/XXXX`.
-Update the `hello@masmarketing.com` address regardless.
+The `#send` handler in main.js POSTs JSON `{name,email,need,message}` to **Formspree**.
+**To activate:** create a form at formspree.io and replace `REPLACE_ID` in the
+`https://formspree.io/f/REPLACE_ID` URL with your form id. Field ids are `f-name`,
+`f-email`, `f-div`, `f-msg`; only email + message are required. The button text
+reflects sending / success / error state.
 
 ## Deploy
 - **Cloudflare Pages**: `npx wrangler pages deploy .`
