@@ -18,14 +18,16 @@ const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.t
 document.querySelectorAll('.rv,.clip').forEach(el=>io.observe(el));
 
 /* client marquees with real logos */
-const logos={disney:'assets/clients/disney.png',prime:'assets/clients/prime.png',globo:'assets/clients/globo.png',paris:'assets/clients/paris.png',wb:'assets/clients/wb.png'};
+const logos={disney:'assets/clients/disney.png',prime:'assets/clients/prime.png',
+  globo:'assets/clients/globoplay.png',paris:'assets/clients/paris.png',wb:'assets/clients/wb.png'};
 const wall=[
-  {img:'disney'},{img:'prime'},{img:'wb'},{img:'globo'},{img:'paris'},
-  {t:'YouTube',s:'Originals'},{t:'Google'},{t:'H&M'},{t:'Netflix'},{t:'Neutrogena'},
-  {t:'D1 Sports'},{t:'Nestlé'},{t:'Tinder'},{t:'SpongeBob'},{t:'The Weather Channel'}
+  {img:'disney.png'},{img:'prime.png'},{img:'netflix.png'},{img:'google.png'},{img:'wb.png'},
+  {img:'youtube.png'},{img:'spongebob.png'},{img:'nestle.png'},{img:'neutrogena.png'},{img:'tinder.png'},
+  {img:'globoplay.png'},{img:'paris.png'},{img:'d1-sports.png'},{img:'weather-channel.png'}
+  // H&M: no logo uploaded yet — add {img:'hm.png'} once it exists, or use {t:'H&M'}
 ];
 function chipHTML(c){
-  if(c.img) return `<div class="chip" data-cur><img src="${logos[c.img]}" alt=""></div>`;
+  if(c.img) return `<div class="chip" data-cur><img src="assets/clients/${c.img}" alt="" loading="lazy"></div>`;
   return `<div class="chip text" data-cur>${c.t}${c.s?`<small>${c.s}</small>`:''}</div>`;
 }
 function fillRow(el,list){el.innerHTML=(list.map(chipHTML).join('')).repeat(2);}
