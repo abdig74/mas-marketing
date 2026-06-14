@@ -1,0 +1,10 @@
+{
+  // MAS Marketing — static site on Cloudflare Workers (Static Assets).
+  // No "main" / no Worker script: Cloudflare just serves the files in "directory".
+  "name": "mas-marketing",
+  "compatibility_date": "2026-06-13",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "single-page-application"
+  }
+}

@@ -1,0 +1,10 @@
+# Don't serve these publicly as part of the site
+wrangler.jsonc
+.assetsignore
+.gitignore
+README.md
+CLAUDE.md
+content.slots.json
+.git
+node_modules
+.DS_Store
