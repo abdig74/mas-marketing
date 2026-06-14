@@ -10,8 +10,6 @@ const isMobile = ()=>innerWidth<=820;
      div-*        -> assets/media/divisions/                                   */
 const MEDIA = {
   // Fill `src` when you have the file. Empty src = keeps the placeholder. Use a poster for videos.
-  'hero-reel':     {type:'image', src:'assets/media/clips/hero-reel.webp'},     // swap to video when reel is ready
-  'vertical-clip': {type:'image', src:'assets/media/clips/vertical-clip.webp'}, // swap to video when reel is ready
   'photo-1':       {type:'image', src:'assets/media/clips/photo-1.webp'},
   'photo-2':       {type:'image', src:'assets/media/clips/photo-2.webp'},
   'campaign-film': {type:'image', src:'assets/media/clips/campaign-film.webp'}, // swap to video when reel is ready
