@@ -27,7 +27,7 @@ const wall=[
   // H&M: no logo uploaded yet — add {img:'hm.png'} once it exists, or use {t:'H&M'}
 ];
 function chipHTML(c){
-  if(c.img) return `<div class="chip" data-cur><img src="assets/clients/${c.img}" alt="" loading="lazy"></div>`;
+  if(c.img) return `<div class="chip" data-cur><img class="l-${c.img.replace('.png','')}" src="assets/clients/${c.img}" alt="" loading="lazy"></div>`;
   return `<div class="chip text" data-cur>${c.t}${c.s?`<small>${c.s}</small>`:''}</div>`;
 }
 function fillRow(el,list){el.innerHTML=(list.map(chipHTML).join('')).repeat(2);}
