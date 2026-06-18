@@ -15,7 +15,7 @@ const MEDIA = {
   'campaign-film': {type:'image', src:'assets/media/clips/campaign-film.webp'}, // swap to video when reel is ready
   'still-1':       {type:'image', src:'assets/media/clips/still-1.webp'},
   'still-2':       {type:'image', src:'assets/media/clips/still-2.webp'},
-  'who-photo':     {type:'image', src:'assets/media/about/who-photo.webp'},               // assets/media/about/
+  'who-photo':     {type:'image', src:'assets/logo-mas.png'},                             // logo mark
   'div-marketing': {type:'image', src:'assets/media/divisions/div-marketing.webp'},       // assets/media/divisions/
   'div-fam':       {type:'image', src:'assets/media/divisions/div-fam.webp'},   // swap to video when reel is ready
   'div-ai':        {type:'image', src:'assets/media/divisions/div-ai.webp'},    // swap to video when reel is ready
@@ -288,7 +288,9 @@ function onScroll(){
   if(!motionOff){
     // hero parallax
     if(y<vh){
-      heroMark.style.transform=`translateY(calc(-50% + ${y*0.18}px)) translateX(${y*0.04}px)`;
+      heroMark.style.transform=isMobile()
+        ? `translateX(calc(-50% + ${y*0.04}px)) translateY(calc(-50% + ${y*0.18}px))`
+        : `translateY(calc(-50% + ${y*0.18}px)) translateX(${y*0.04}px)`;
       const hc=hero.querySelector('.wrap'); hc.style.transform=`translateY(${y*0.12}px)`; hc.style.opacity=`${1-y/vh*0.9}`;
     }
     // ambient drift
