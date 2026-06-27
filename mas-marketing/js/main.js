@@ -16,7 +16,7 @@ const MEDIA = {
   'still-1':       {type:'image', src:'assets/media/clips/still-1.webp'},
   'still-2':       {type:'image', src:'assets/media/clips/still-2.webp'},
   'who-photo':     {type:'image', src:'assets/logo-mas.png'},                             // logo mark
-  'div-marketing': {type:'image', src:'assets/media/divisions/div-marketing.webp'},       // assets/media/divisions/
+  'div-marketing': {type:'image', src:'assets/logo-mas.png'},                             // logo mark
   'div-fam':       {type:'image', src:'assets/media/divisions/div-fam.webp'},   // swap to video when reel is ready
   'div-ai':        {type:'image', src:'assets/media/divisions/div-ai.webp'},    // swap to video when reel is ready
   'div-distro':    {type:'image', src:'assets/media/divisions/div-distro.webp'},
