@@ -1,0 +1,5 @@
+# Heavy raw media originals — kept locally, never committed or deployed
+assets/media/_raw/
+
+# OS cruft
+.DS_Store

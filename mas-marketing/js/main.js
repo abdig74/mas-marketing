@@ -2,6 +2,54 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 const motionOff = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isMobile = ()=>innerWidth<=820;
 
+/* ===== MEDIA: real assets for the section placeholders =====
+   Fill `src` when you have the file (paths below). Empty src = keeps the
+   placeholder. Videos get a `poster` (first-frame jpg) for a clean load.
+     clips/photos -> assets/media/clips/
+     who-photo    -> assets/media/about/
+     div-*        -> assets/media/divisions/                                   */
+const MEDIA = {
+  // Fill `src` when you have the file. Empty src = keeps the placeholder. Use a poster for videos.
+  'photo-1':       {type:'image', src:'assets/media/clips/photo-1.webp'},
+  'photo-2':       {type:'image', src:'assets/media/clips/photo-2.webp'},
+  'campaign-film': {type:'image', src:'assets/media/clips/campaign-film.webp'}, // swap to video when reel is ready
+  'still-1':       {type:'image', src:'assets/media/clips/still-1.webp'},
+  'still-2':       {type:'image', src:'assets/media/clips/still-2.webp'},
+  'who-photo':     {type:'image', src:'assets/logo-mas.png'},                             // logo mark
+  'div-marketing': {type:'image', src:'assets/media/divisions/div-marketing.webp'},       // assets/media/divisions/
+  'div-fam':       {type:'image', src:'assets/media/divisions/div-fam.webp'},   // swap to video when reel is ready
+  'div-ai':        {type:'image', src:'assets/media/divisions/div-ai.webp'},    // swap to video when reel is ready
+  'div-distro':    {type:'image', src:'assets/media/divisions/div-distro.webp'},
+};
+function hydrateSlots(){
+  document.querySelectorAll('[data-slot]').forEach(ph=>{
+    const cfg=MEDIA[ph.dataset.slot]; if(!cfg||!cfg.src) return;
+    // Reveal-safety net: .rv/.clip tiles start invisible (opacity:0 / clipped)
+    // until the scroll observer adds .in. A hydrated tile must never stay hidden
+    // if that observer misses it — so also reveal the instant the real media
+    // decodes. This keeps the fade/clip-wipe animation, just guarantees it runs.
+    const reveal=()=>ph.classList.add('in');
+    let el;
+    if(cfg.type==='video'){
+      el=document.createElement('video');
+      el.src=cfg.src; el.autoplay=true; el.muted=true; el.loop=true;
+      el.setAttribute('playsinline',''); el.setAttribute('preload','metadata');
+      if(cfg.poster) el.poster=cfg.poster;
+      el.addEventListener('loadeddata',reveal,{once:true});
+    } else {
+      el=document.createElement('img');
+      el.src=cfg.src; el.loading='lazy';
+      el.alt=ph.querySelector('.lab')?.textContent||'';
+      el.addEventListener('load',reveal,{once:true});
+    }
+    el.className='slot-fill';
+    el.onerror=()=>el.remove();   // bad path -> fall back to placeholder, no broken icon
+    ph.appendChild(el);
+    if(el.complete && el.naturalWidth) reveal();   // already cached -> reveal now
+  });
+}
+hydrateSlots();
+
 /* nav + menu */
 const nav=document.getElementById('nav');
 const toggle=document.getElementById('toggle'),links=document.getElementById('links');
@@ -240,7 +288,9 @@ function onScroll(){
   if(!motionOff){
     // hero parallax
     if(y<vh){
-      heroMark.style.transform=`translateY(calc(-50% + ${y*0.18}px)) translateX(${y*0.04}px)`;
+      heroMark.style.transform=isMobile()
+        ? `translateX(calc(-50% + ${y*0.04}px)) translateY(calc(-50% + ${y*0.18}px))`
+        : `translateY(calc(-50% + ${y*0.18}px)) translateX(${y*0.04}px)`;
       const hc=hero.querySelector('.wrap'); hc.style.transform=`translateY(${y*0.12}px)`; hc.style.opacity=`${1-y/vh*0.9}`;
     }
     // ambient drift
@@ -282,9 +332,23 @@ addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(onScroll);tick
 addEventListener('resize',onScroll);
 onScroll();
 
-/* contact -> mailto */
-document.getElementById('send').addEventListener('click',()=>{
-  const n=f_name.value.trim(),em=f_email.value.trim(),d=f_div.value,m=f_msg.value.trim();
-  const body=`Name: ${n}%0D%0AEmail: ${em}%0D%0ANeed: ${d}%0D%0A%0D%0A${encodeURIComponent(m)}`;
-  location.href=`mailto:hello@masmarketing.com?subject=${encodeURIComponent('New inquiry — '+(n||'Website'))}&body=${body}`;
+/* contact -> Formspree AJAX POST */
+document.getElementById('send').addEventListener('click', async (e)=>{
+  const btn=e.currentTarget;
+  const name=document.getElementById('f-name').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const need=document.getElementById('f-div').value;
+  const message=document.getElementById('f-msg').value.trim();
+  if(!email||!message){btn.textContent='Add your email + message';return;}
+  btn.disabled=true; btn.textContent='Sending…';
+  try{
+    const r=await fetch('https://formspree.io/f/xvzndvqp',{
+      method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+      // _subject + _replyto are Formspree special fields (email subject / reply-to)
+      body:JSON.stringify({name,email,need,message,_replyto:email,_subject:`New inquiry — ${name||'Website'}`})
+    });
+    btn.textContent = r.ok ? "Sent ✓ — we'll reply within 24h" : 'Something went wrong';
+    if(r.ok){['f-name','f-email','f-msg'].forEach(id=>document.getElementById(id).value='');}
+  }catch{ btn.textContent='Network error — try again'; }
+  btn.disabled=false;
 });
